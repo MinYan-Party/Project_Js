@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+  <meta charset="utf-8">
+  <title>MinYan-Party Jquery plugin Paging-分页</title>
+  <link rel="stylesheet" href="../css/comm.css" />
+  <link rel="stylesheet" href="../css/paging.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>效果示例</h1>
+    <div class="pageTurning"></div>
+
+    <div class="content">&nbsp;</div>
+
+    <h1>导入文件</h1>
+    <div class="content">
+      <pre>
+&lt;link rel="stylesheet" href="../css/paging.css" /&gt;
+&lt;script type="text/javascript" src="jquery1.11.1.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../js/paging.js"&gt;&lt;/script&gt;
+      </pre>
+    </div>
+
+    <h1>调用示例</h1>
+    <div class="content">
+      <pre>
+  $('.pageTurning').paging(
+      {
+        itemClick:function(page,obj){
+          obj.setData({page:page,totalNum:110});  // totalNum:总页数
+        }
+      }
+  );
+      </pre>
+    </div>
+
+    <h1>Ajax分页调用示例</h1>
+    <div class="content">
+      <pre>
+  $('.pageTurning').paging(
+      {itemClick:function(page,obj){  //page表示当前页，obj表示分页对象 ，此处两个参数按示例写，不用考虑
+          $.ajax({
+              url:'',
+              data:[],
+              success:function(data){
+                  /** 处理逻辑 开始 */
+
+                  ...
+
+                  /** 处理逻辑 结束 */
+                  obj.setData({page:page,totalNum:obj.options.totalNum});   //page不用理会，totalNum为调用ajax分页后返回的列表总行数（需自行处理）
+              }
+          })
+      }}
+  );
+      </pre>
+    </div>
+
+    <h1>参数说明</h1>
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th class="name">名称</th>
+            <th class="desc">描述</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>pageSet</td>
+            <td>
+              分页常用参数。<br/>
+              totalpage：总页数，在插件中计算，不用手动设置，默认就行；<br/>
+              page：当前页码，设置后该页码为选中状态。
+            </td>
+          </tr>
+          <tr>
+            <td>totalNum</td>
+            <td>总记录数，插件调用时设置</td>
+          </tr>
+          <tr>
+            <td>num</td>
+            <td>每页显示行数</td>
+          </tr>
+          <tr>
+            <td>position</td>
+            <td>分页显示位置，可选参数（left、center、right），<span>PS:可能存在样式冲突而不起作用的问题</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content"></div>
+    <h1>方法说明</h1>
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th class="name">方法</th>
+            <th class="desc">描述</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>itemClick</td>
+            <td>点击分页页码时触发，具体使用参照“调用示例”</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content">&nbsp;</div>
+
+    <div class="footer">
+      声明：作者原创，大家随意使用，有不美的地方或有好的建议请发邮件 (yan65918752@163.com)
+    </div>
+
+    <div class="content">&nbsp;</div>
+
+  </div>
+<script type="text/javascript" src="jquery1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/paging.js"></script>
+<script type="text/javascript">
+$('.pageTurning').paging(
+    {
+      itemClick:function(page,obj){
+        obj.setData({page:page,totalNum:110});
+      }
+    }
+);
+</script>
+</body>
+</html>
