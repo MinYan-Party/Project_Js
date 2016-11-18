@@ -1,2 +1,5 @@
-# Project_Js_Common_Plugin
-项目中经常需要用到的js公共插件
+# Project_Js
+Web前端常用插件
+
+# Paging
+分页
