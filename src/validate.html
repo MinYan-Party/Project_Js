@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+  <meta charset="utf-8">
+  <title>MinYan-Party Jquery plugin Validate-表单验证</title>
+  <link rel="stylesheet" href="../css/comm.css" />
+  <link rel="stylesheet" href="../css/validate.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>说明</h1>
+    <div class="content">
+      <p>此插件调用方式与jQuery Validate插件相似，借鉴了jQuery Validate大部分调用方式(但是代码完全重新手写，借鉴了原插件部分正则)。</p>
+      <p style="font-weight:bold;">为什么我要重写一个类似的插件？</p>因为发现jQuery Validate需要用form表单来提交才能触发Validate（有可能我功力不到家，找不到好的调用方式），
+      但是我的项目都是Ajax请求，并没有用到form，所以萌生了重写插件的想法，因为觉得jQuery Validate的调用方式很好，所以做了个类似的。
+      <p style="color:red;">在使用此插件前，请先看一遍插件代码，注释应该比较详细了。能对怎么修改插件使之适合自己很有帮助.</P>
+    </div>
+
+    <h1>效果示例</h1>
+    <div class="content">
+      <input type="button" id="submitValidate" class="btn" value="提交验证"/>
+      <br/>&nbsp;
+      <div class="validate">
+          <table>
+            <thead>
+                <tr>
+                  <th class="name" style="width:300px;">描述</td>
+                  <th class="desc">效果</td>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <td>非空</td>
+                  <td><input name="req" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>是否存在空格</td>
+                  <td><input name="space" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>中英文、数字、下划线</td>
+                  <td><input name="username" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>英文、数字、下划线</td>
+                  <td><input name="loginname" type="text" /></td>
+              </tr>
+              <tr>
+                  <td rowspan="4">满足某一条件时为必选</td>
+                  <td>
+                    <select name="parentSelect" style="width:100px;">
+                      <options>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                      </options>
+                    </select>
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" name="select1"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" name="select2"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" name="select3"/>
+                </td>
+              </tr>
+              <tr>
+                  <td>最小长度和最大长度</td>
+                  <td><input name="lengthName" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>数字</td>
+                  <td><input name="numName" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>电子邮件地址</td>
+                  <td><input name="emailName" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>手机号码</td>
+                  <td><input name="phoneName" type="text" /></td>
+              </tr>
+              <tr>
+                  <td>请求后台验证</td>
+                  <td><input name="remoteName" type="text" /></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <h1>调用说明</h1>
+    <div class="content">
+      <pre>
+$('.validate').validate({
+    rule:{
+      inputName:{
+        'ruleName':true
+      }
+    },
+    message:{
+      ruleName:'该值不应该有空格'
+    }
+});
+      </pre>
+      <table>
+        <thead>
+          <tr>
+            <th class="name">字段</th>
+            <th class="desc">说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>inputName</td>
+            <td>表单元素的name属性值</td>
+          </tr>
+          <tr>
+            <td>ruleName</td>
+            <td>验证规则的名称</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h1>调用示例</h1>
+    <div class="content">
+      <pre>
+$('#submitValidate').on('click',function(){
+  $('.validate').validate({
+      rule:{
+        //验证input中name=req元素不能为空 ,两种方式
+        // req:'required'
+        req:{
+          'space':true,    //name为req的表单元素值不能有空格
+          'required':true  //name为req的表单元素值不能为空
+        },
+        space:'space',
+        username:{
+          'required':true,
+          'username':true
+        },
+        loginname:{
+          'required':true,
+          'loginname':true
+        },
+        select1:{
+          parent:{
+            parentSelect:'1'  //name为parentSelect的表单元素的值为1时，name为select1的表单元素不能为空
+          }
+        },
+        select2:{
+          parent:{
+            parentSelect:'2'  //name为parentSelect的表单元素的值为2时，name为select2的表单元素不能为空
+          }
+        },
+        select3:{
+          parent:{
+            parentSelect:'3'  //name为parentSelect的表单元素的值为3时，name为select3的表单元素不能为空
+          }
+        },
+        lengthName:{
+          minlength:6,
+          maxlength:12
+        },
+        numName:{
+          required:true,
+          number:true
+        },
+        emailName:{
+          required:true,
+          email:true
+        },
+        phoneName:{
+          required:true,
+          phone:true
+        },
+        remoteName:{
+          remote:{    //后台调用验证，使用Ajax同步请求验证，可修改源码
+            url:'',
+            data:[]
+          }
+        }
+      },
+      message:{
+        space:'该值不应该有空格', //自定义提示语
+        select1_parent:'当select值为1时，输入框不能为空',
+        select2_parent:'当select值为2时，输入框不能为空',
+        select3_parent:'当select值为3时，输入框不能为空'
+      }
+  });
+});
+      </pre>
+    </div>
+    <h1>参数说明</h1>
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th class="name">名称</th>
+            <th class="desc">描述</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>rule</td>
+            <td>验证规则</td>
+          </tr>
+          <tr>
+            <td>space</td>
+            <td>验证值中是否包含空格，默认值为true</td>
+          </tr>
+          <tr>
+            <td>required</td>
+            <td>非空验证，默认值为true</td>
+          </tr>
+          <tr>
+            <td>username</td>
+            <td>中英文、数字、下划线 验证</td>
+          </tr>
+          <tr>
+            <td>loginname</td>
+            <td>英文、数字、下划线 验证</td>
+          </tr>
+          <tr>
+            <td>parent</td>
+            <td>满足该参数下的条件时，表单元素值不为空</td>
+          </tr>
+          <tr>
+            <td>minlength</td>
+            <td>最小长度</td>
+          </tr>
+          <tr>
+            <td>maxlength</td>
+            <td>最大长度</td>
+          </tr>
+          <tr>
+            <td>number</td>
+            <td>数字</td>
+          </tr>
+          <tr>
+            <td>email</td>
+            <td>电子邮件</td>
+          </tr>
+          <tr>
+            <td>phone</td>
+            <td>手机号码</td>
+          </tr>
+          <tr>
+            <td>remote</td>
+            <td>remote下包含url和data两个参数，同jQuery Ajax。<br/>
+              值得注意的一点是Ajax请求返回依据的是json格式来判断，验证成功应返回{success:true},失败可不处理</td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>定义提示语，每一项都有默认提示语，可在此项中自定义<br/>
+                <p style="color:red;">注意：remote的提示没有默认的，参照调用示例里面的设置方式</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content">&nbsp;</div>
+
+    <div class="footer">
+      声明：作者原创，大家随意使用，有不美的地方或有好的建议请发邮件 (yan65918752@163.com)
+    </div>
+
+    <div class="content">&nbsp;</div>
+  </div>
+<script type="text/javascript" src="jquery1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
+$('#submitValidate').on('click',function(){
+  $('.validate').validate({
+      rule:{
+        //验证input中name=req元素不能为空 ,两种方式
+        // req:'required'
+        req:{
+          'space':true,    //name为req的表单元素值不能有空格
+          'required':true  //name为req的表单元素值不能为空
+        },
+        space:'space',
+        username:{
+          'required':true,
+          'username':true
+        },
+        loginname:{
+          'required':true,
+          'loginname':true
+        },
+        select1:{
+          parent:{
+            parentSelect:'1'  //name为parentSelect的表单元素的值为1时，name为select1的表单元素不能为空
+          }
+        },
+        select2:{
+          parent:{
+            parentSelect:'2'  //name为parentSelect的表单元素的值为2时，name为select2的表单元素不能为空
+          }
+        },
+        select3:{
+          parent:{
+            parentSelect:'3'  //name为parentSelect的表单元素的值为3时，name为select3的表单元素不能为空
+          }
+        },
+        lengthName:{
+          minlength:6,
+          maxlength:12
+        },
+        numName:{
+          required:true,
+          number:true
+        },
+        emailName:{
+          required:true,
+          email:true
+        },
+        phoneName:{
+          required:true,
+          phone:true
+        },
+        remoteName:{
+          remote:{    //后台调用验证，使用Ajax同步请求验证，可修改源码
+            url:'',
+            data:[]
+          }
+        }
+      },
+      message:{
+        space:'该值不应该有空格', //自定义提示语
+        select1_parent:'当select值为1时，输入框不能为空',
+        select2_parent:'当select值为2时，输入框不能为空',
+        select3_parent:'当select值为3时，输入框不能为空'
+      }
+  });
+});
+</script>
+</body>
+</html>
